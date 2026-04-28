@@ -1,49 +1,42 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>🌊 Sakura Watersong Haven</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sakura Watersong Haven</title>
 </head>
-<body style="font-family: Arial; padding: 20px; background:#f8fafc">
+<body>
+  <h1>🌊 Haven Control Dashboard</h1>
 
-<h1>🌊 Haven Control Dashboard</h1>
+  <button onclick="loadData()">🔄 Refresh Data</button>
+  <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSdbBZUsHB_bK8aKyPaSNFPJW3fR22CIqRNhaENQi3W6ikqGBg/viewform','_blank')">
+    🔗 Open Log Form
+  </button>
 
-<button onclick="loadData()">🔄 Refresh Data</button>
-<button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSdbBZUsHB_bK8aKyPaSNFPJW3fR22CIqRNhaENQi3W6ikqGBg/viewform','_blank')">
-🔗 Open Log Form
-</button>
+  <h2 id="status">Ready</h2>
+  <div id="data"></div>
 
-<h2 id="status">Ready</h2>
+  <script>
+    async function loadData() {
+      document.getElementById("status").innerText = "Loading...";
 
-<div id="data"></div>
+      const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRrEuqpj3R8m7TFGabeVBTC_wwTgiBNmybVxGqcvd0ygZc46meLdmfqO83Z_2hJKy63CJM_JjB6jaCQ/pub?gid=2045933570&single=true&output=csv";
 
-<script>
-async function loadData() {
-  document.getElementById("status").innerText = "Loading...";
+      const res = await fetch(url);
+      const text = await res.text();
+      const rows = text.trim().split("\n").slice(1);
+      const latest = rows[rows.length - 1].split(",");
 
-  const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRrEuqpj3R8m7TFGabeVBTC_wwTgiBNmybVxGqcvd0ygZc46meLdmfqO83Z_2hJKy63CJM_JjB6jaCQ/pub?gid=2045933570&single=true&output=csv";
+      document.getElementById("data").innerHTML = `
+        <h3>Latest Results</h3>
+        <p>pH: ${latest[2]}</p>
+        <p>Nitrite: ${latest[3]}</p>
+        <p>Nitrate: ${latest[4]}</p>
+        <p>KH: ${latest[5]}</p>
+        <p>GH: ${latest[6]}</p>
+        <p>Ammonia: ${latest[8]}</p>
+      `;
 
-  try {
-    const res = await fetch(url);
-    const text = await res.text();
-
-    const rows = text.split("\n").slice(1);
-
-    const latest = rows[rows.length - 1].split(",");
-
-    document.getElementById("data").innerHTML = `
-      <h3>Latest Results</h3>
-      <p>pH: ${latest[2]}</p>
-      <p>KH: ${latest[5]}</p>
-      <p>Ammonia: ${latest[8]}</p>
-    `;
-
-    document.getElementById("status").innerText = "Loaded ✔";
-  } catch (e) {
-    document.getElementById("status").innerText = "Error loading data";
-  }
-}
-</script>
-
+      document.getElementById("status").innerText = "Loaded ✔";
+    }
+  </script>
 </body>
 </html>
