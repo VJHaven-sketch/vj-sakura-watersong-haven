@@ -1,66 +1,8 @@
-import { useState } from "react";
-
 export default function App() {
-  const [data, setData] = useState(null);
-  const [status, setStatus] = useState("Ready");
-
-  async function loadData() {
-    setStatus("Loading...");
-
-    const url =
-      "https://docs.google.com/spreadsheets/d/e/2PACX-1vRnEuqpj3R8m7TFGabeVBTC_wwTgiBNmybVxGqcvd0ygZc46meLdmfq083Z_2hJKy63CJM_jjB6jaCQ/pub?gid=2045933570&single=true&output=csv";
-
-    try {
-      const res = await fetch(url);
-      const text = await res.text();
-
-      const rows = text.split("\n").slice(1);
-      const last = rows[rows.length - 1].split(",");
-
-      setData({
-        pH: last[2],
-        nitrite: last[3],
-        nitrate: last[4],
-        kh: last[5],
-        gh: last[6],
-        ammonia: last[8],
-      });
-
-      setStatus("Loaded ✅");
-    } catch (err) {
-      setStatus("Error loading data");
-    }
-  }
-
   return (
-    <div style={{ padding: 20, fontFamily: "Arial" }}>
+    <div>
       <h1>🌊 Haven Control Dashboard</h1>
-
-      <button onClick={loadData}>🔄 Refresh Data</button>
-      <button
-        onClick={() =>
-          window.open(
-            "https://docs.google.com/forms/d/e/1FAIpQLSdbBZUsHB_bK8aKyPaSNFPJW3fR22CIqRNhaENQi3W6ikqGBg/viewform",
-            "_blank"
-          )
-        }
-      >
-        🔗 Open Log Form
-      </button>
-
-      <h2>{status}</h2>
-
-      {data && (
-        <div>
-          <h3>Latest Results</h3>
-          <p>pH: {data.pH}</p>
-          <p>Nitrite: {data.nitrite}</p>
-          <p>Nitrate: {data.nitrate}</p>
-          <p>KH: {data.kh}</p>
-          <p>GH: {data.gh}</p>
-          <p>Ammonia: {data.ammonia}</p>
-        </div>
-      )}
+      <p>System online…</p>
     </div>
   );
 }
